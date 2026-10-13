@@ -1,0 +1,109 @@
+cis practical 2-Data Exploration
+
+Cell 1 — Import libraries and set dataset path
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from PIL import Image
+
+path = r"C:\Users\hp\Downloads\DevanagariHandwrittenCharacterDataset\Train"
+
+
+Cell 2 — Count classes
+
+classes = os.listdir(path)
+classes = [c for c in classes if os.path.isdir(os.path.join(path, c))]
+
+print("Total Classes:", len(classes))
+print(classes)
+
+
+Cell 3 — Explore one sample
+
+folder = os.path.join(path, classes[0])
+file = os.listdir(folder)[0]
+img_path = os.path.join(folder, file)
+
+img = Image.open(img_path)
+
+plt.imshow(img, cmap="gray")
+plt.title(classes[0])
+plt.axis("off")
+plt.show()
+
+
+Cell 4 — Explore multiple samples
+
+plt.figure(figsize=(10, 5))
+
+for i in range(6):
+    folder = os.path.join(path, classes[i])
+    file = os.listdir(folder)[0]
+    img = Image.open(os.path.join(folder, file))
+
+    plt.subplot(2, 3, i + 1)
+    plt.imshow(img, cmap="gray")
+    plt.title(classes[i])
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
+
+
+Cell 5 — Create metadata
+
+data = []
+
+for c in classes:
+    folder = os.path.join(path, c)
+
+    for file in os.listdir(folder):
+        if file.lower().endswith(".png"):
+            data.append([c, file, os.path.join(folder, file)])
+
+print("Metadata created:", len(data))
+
+
+Cell 6 — Extract and display metadata
+
+df = pd.DataFrame(data, columns=["Class", "Filename", "Path"])
+
+print(df.head())
+print(df.shape)
+print(df["Class"].value_counts().head())
+
+Cell 7 — Dataset Statistics
+
+print("Total Images:", len(df))
+print("Total Classes:", df["Class"].nunique())
+print(df["Class"].value_counts())
+
+cell 8 - Check image properties
+
+img = Image.open(img_path)
+
+print("Format:", img.format)
+print("Size:", img.size)
+print("Mode:", img.mode)
+print("Pixels:", img.size[0] * img.size[1])
+
+
+cell 9 - Basic image processing
+
+img = Image.open(img_path).convert("L")
+
+plt.imshow(img, cmap="gray")
+plt.title("Grayscale Image")
+plt.axis("off")
+plt.show()
+
+
+
+Important exam notes
+- Run the cells from top to bottom.
+- If you get FileNotFoundError, check your dataset path.
+- If you get IndexError in Cell 4, make sure the dataset contains at least six class folders.
+- This code assumes the dataset has class-specific folders containing PNG images, as in your journal.
+- If the examiner provides a different dataset, the folder path and possibly the image-file extension may need to change.
+
